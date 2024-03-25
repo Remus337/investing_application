@@ -1,0 +1,35 @@
+# syntax=docker/dockerfile:1
+
+# Set the base image with the Node.js version you want to use
+ARG NODE_VERSION=21.0.0
+FROM node:${NODE_VERSION}-alpine
+
+# Use production node environment by default
+ENV NODE_ENV=production
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Assuming you want to use npm ci to install dependencies for production,
+# you should copy package.json and package-lock.json first.
+COPY package*.json ./
+
+# Install production dependencies.
+# Note: npm ci is preferred for production builds as it is faster and more reliable.
+# However, because you're running as a non-root user later, you need to handle permission issues here.
+# For now, let's keep this simple and make sure everything works with npm install.
+RUN npm ci --only=production
+
+# After installing dependencies, copy the rest of the application code.
+COPY . .
+
+# Since you're using a non-root user, it's important to ensure that permissions are set correctly.
+# The node user already exists in Node's official Docker images, so we use it.
+# Change ownership of the app directory to the node user.
+USER node
+
+# Expose the port that your application listens on.
+EXPOSE 3000
+
+# Specify the command to run your app
+CMD ["node", "src/index.js"]
