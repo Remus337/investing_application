@@ -5,7 +5,7 @@ const BASE_URL = 'https://api.polygon.io';
 
 async function getStockPrice(symbol) {
     try {
-        const url = `${BASE_URL}/v2/aggs/ticker/${symbol}/range/1/day/2023-01-09/2023-01-09`;
+        const url = `${BASE_URL}/v2/aggs/ticker/${symbol}/range/1/day/2024-01-09/2024-01-09`;
         const response = await axios.get(url, {
             params: {
                 apiKey: POLYGON_API_KEY
