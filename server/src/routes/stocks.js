@@ -2,15 +2,21 @@ const axios = require('axios');
 
 const POLYGON_API_KEY = 'ArRNBD4RwUZFA5kE1Zu7IZiTwbFaHJl4';
 const BASE_URL = 'https://api.polygon.io';
+const cache = {};
 
 async function getStockPricesForDateRange(symbol, startDate, endDate) {
+    const cacheKey = `${symbol}-${startDate}-${endDate}`;
+    if (cache[cacheKey]) {
+        console.log(`Using cached data for ${symbol}`);
+        return cache[cacheKey];
+    }
+
     const url = `${BASE_URL}/v2/aggs/ticker/${symbol}/range/1/day/${startDate}/${endDate}`;
     try {
         const response = await axios.get(url, {
-            params: {
-                apiKey: POLYGON_API_KEY
-            }
+            params: { apiKey: POLYGON_API_KEY }
         });
+        cache[cacheKey] = response.data;
         return response.data;
     } catch (error) {
         console.error(`Error fetching stock prices for ${symbol}:`, error.message);
@@ -31,6 +37,7 @@ async function fetchAllStocksData(symbols, startDate, endDate) {
             }
         } catch (error) {
             console.error(`Failed to fetch data for ${symbol}:`, error);
+            allData.push({ symbol, data: [] });
         }
     }
     return allData;
