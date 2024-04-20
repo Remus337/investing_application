@@ -4,11 +4,12 @@ const { fetchAllStocksData } = require('./routes/stocks');
 
 const app = express();
 const port = 3001;
+const today = new Date().toISOString().slice(0, 10);
 
 app.use(cors());
 app.get('/stocks', async (req, res) => {
     try {
-        const data = await fetchAllStocksData(['AAPL', 'MSFT', 'GOOGL'], '2022-01-01', '2024-01-01');
+        const data = await fetchAllStocksData(['AAPL', 'MSFT', 'GOOGL'], '2022-06-01', today);
         res.format({
             'text/html': function () {
                 let html = '<h1>Stock Prices</h1>';
