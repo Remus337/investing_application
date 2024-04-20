@@ -20,14 +20,21 @@ async function getStockPricesForDateRange(symbol, startDate, endDate) {
 }
 
 async function fetchAllStocksData(symbols, startDate, endDate) {
+    const allData = [];
     for (const symbol of symbols) {
         try {
             const data = await getStockPricesForDateRange(symbol, startDate, endDate);
-            console.log(`Data for ${symbol}:`, data);
+            if (data && Array.isArray(data.results)) {
+                allData.push({ symbol, data: data.results });
+            } else {
+                console.error(`No data returned for ${symbol}`);
+                allData.push({ symbol, data: [] });
+            }
         } catch (error) {
             console.error(`Failed to fetch data for ${symbol}:`, error);
         }
     }
+    return allData;
 }
 
 fetchAllStocksData(symbols, '2022-01-01', '2024-01-01');
