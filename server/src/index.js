@@ -1,15 +1,28 @@
 const express = require('express');
 const cors = require('cors');
 const { fetchAllStocksData } = require('./routes/stocks');
+const registerRoute = require('./routes/register');
+const loginRoute = require('./routes/login');
+const validateRoute = require('./routes/validate');
+const logoutRoute = require('./routes/logout');
 
 const app = express();
 const port = 3001;
 const today = new Date().toISOString().slice(0, 10);
 
 app.use(cors());
+app.use(express.json()); // Enable JSON parsing for POST requests
+
+// Use the separate route files
+app.use('/register', registerRoute);
+app.use('/login', loginRoute);
+app.use('/validate', validateRoute);
+app.use('/logout', logoutRoute);
+
+// Existing stocks endpoint
 app.get('/stocks', async (req, res) => {
     try {
-        const data = await fetchAllStocksData(['AAPL', 'MSFT', 'GOOGL'], '2022-06-01', today);
+        const data = await fetchAllStocksData(['AAPL', 'MSFT', 'GOOGL', 'TSLA', 'AMZN', 'NFLX', 'NVDA', 'AMD'], '2023-06-01', today);
         res.format({
             'text/html': function () {
                 let html = '<h1>Stock Prices</h1>';
