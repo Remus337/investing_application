@@ -5,6 +5,8 @@ const registerRoute = require('./routes/register');
 const loginRoute = require('./routes/login');
 const validateRoute = require('./routes/validate');
 const logoutRoute = require('./routes/logout');
+const postsRoutes = require('./routes/social/posts');
+const commentsRoutes = require('./routes/social/comments');
 
 const app = express();
 const port = 3001;
@@ -18,6 +20,8 @@ app.use('/register', registerRoute);
 app.use('/login', loginRoute);
 app.use('/validate', validateRoute);
 app.use('/logout', logoutRoute);
+app.use('/posts', postsRoutes);
+app.use('/comments', commentsRoutes);
 
 // Existing stocks endpoint
 app.get('/stocks', async (req, res) => {

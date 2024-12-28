@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 function Register() {
@@ -27,6 +28,13 @@ function Register() {
 
   return (
     <div>
+      <nav className='bg-dark text-white'>
+        <ul>
+            <>
+              <li><Link to="/login"><button className='btn btn-primary'>Login</button></Link></li>
+            </>
+        </ul>
+      </nav>
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />

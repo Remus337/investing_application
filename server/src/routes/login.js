@@ -47,7 +47,7 @@ router.post('/', (req, res) => {
             });
         } else {
             // User is validated, send success response
-            return res.status(200).json({ message: 'Login successful', is_validated: true });
+            return res.status(200).json({ message: 'Login successful', is_validated: true, nickname: user.nickname, user_id: user.id });
         }
     });
 });

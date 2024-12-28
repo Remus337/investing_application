@@ -1,9 +1,13 @@
-// Updated Validate Component
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-function Validate({ onSuccess, onLogout }) {
-  const [formData, setFormData] = useState({ email: '', validationKey: '' });
+function Validate({ onSuccess }) {
+  const location = useLocation();
+  const [formData, setFormData] = useState({
+    email: location.state?.email || '',
+    validationKey: '',
+  });
   const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
@@ -15,9 +19,9 @@ function Validate({ onSuccess, onLogout }) {
     try {
       const response = await axios.post('http://localhost:3001/validate', formData);
       if (response.status === 200) {
-        setMessage('Validation successful. Redirecting to charts...');
+        setMessage('Validation successful. Redirecting to login...');
         setTimeout(() => {
-          onSuccess(); // Redirect to Charts page after successful validation
+          onSuccess();
         }, 1500);
       }
     } catch (error) {
@@ -27,6 +31,22 @@ function Validate({ onSuccess, onLogout }) {
 
   return (
     <div>
+      <nav className="bg-dark text-white">
+        <ul>
+          <>
+            <li>
+              <Link to="/login">
+                <button className="btn btn-primary">Login</button>
+              </Link>
+            </li>
+            <li>
+              <Link to="/register">
+                <button className="btn btn-primary">Register</button>
+              </Link>
+            </li>
+          </>
+        </ul>
+      </nav>
       <h2>Validate Account</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -47,7 +67,6 @@ function Validate({ onSuccess, onLogout }) {
         />
         <button type="submit">Validate</button>
       </form>
-      <button onClick={onLogout}>Logout</button>
       {message && <p>{message}</p>}
     </div>
   );

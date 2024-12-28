@@ -1,10 +1,11 @@
-// Updated Login Component
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function Login({ setIsAuthenticated, onSuccess, onValidationRequired }) {
+function Login({ setIsAuthenticated, onSuccess }) {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,15 +15,15 @@ function Login({ setIsAuthenticated, onSuccess, onValidationRequired }) {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3001/login', formData);
-      
+
       if (response.data.is_validated) {
-        // User is successfully logged in and validated
+        localStorage.setItem('nickname', response.data.nickname); // Save to localStorage
+        localStorage.setItem('user_id', response.data.user_id); // Save to localStorage
         setIsAuthenticated(true);
-        onSuccess(); // Navigate to the Charts page
+        onSuccess(); // Navigate to Charts page
       } else {
-        // User is logged in but not validated
-        setIsAuthenticated(true);
-        onValidationRequired(); // Navigate to the Validate page
+        setIsAuthenticated(false);
+        navigate('/validate', { state: { email: formData.email } }); // Redirect with email
       }
     } catch (error) {
       setMessage('Login failed: ' + (error.response?.data || error.message));
@@ -31,6 +32,15 @@ function Login({ setIsAuthenticated, onSuccess, onValidationRequired }) {
 
   return (
     <div>
+      <nav className="bg-dark text-white">
+        <ul>
+          <li>
+            <Link to="/register">
+              <button className="btn btn-primary">Register</button>
+            </Link>
+          </li>
+        </ul>
+      </nav>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <input
