@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import AddEditPostModal from './AddEditPostModal';
-import PostModal from './PostModal';
+import AddEditPostModal from '../../social/elements/AddEditPostModal';
+import PostModal from '../../social/elements/PostModal';
 
-function Social() {
+function MyPosts() {
     const userId = Number(localStorage.getItem('user_id')); // Convert to a number
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -14,16 +14,16 @@ function Social() {
     const [showAddEditModal, setShowAddEditModal] = useState(false); // Show edit modal
 
     useEffect(() => {
-        fetchPosts();
+        fetchMyPosts();
     }, []);
 
-    const fetchPosts = async () => {
+    const fetchMyPosts = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:3001/posts');
+            const response = await axios.get(`http://localhost:3001/posts?user_id=${userId}`);
             setPosts(response.data);
         } catch (error) {
-            console.error('Error fetching posts:', error);
+            console.error('Error fetching my posts:', error);
         } finally {
             setLoading(false);
         }
@@ -65,7 +65,7 @@ function Social() {
     });
 
     return (
-        <div className="social-page">
+        <div className="my-posts-page">
             <div className="d-flex justify-content-between align-items-center mb-3 pt-1">
                 <div className="sort-dropdown">
                     <select
@@ -83,7 +83,7 @@ function Social() {
                     <input
                         type="text"
                         className="form-control form-control-sm"
-                        placeholder="Search posts..."
+                        placeholder="Search your posts..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -91,7 +91,7 @@ function Social() {
             </div>
 
             {loading ? (
-                <p>Loading posts...</p>
+                <p>Loading your posts...</p>
             ) : (
                 <div>
                     {sortedPosts.map((post) => (
@@ -127,8 +127,7 @@ function Social() {
                 onClick={() => {
                     setSelectedPost(null);
                     setShowAddEditModal(true);
-                }
-                }
+                }}
             >
                 +
             </button>
@@ -158,4 +157,4 @@ function Social() {
     );
 }
 
-export default Social;
+export default MyPosts;

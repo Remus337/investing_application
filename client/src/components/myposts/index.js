@@ -1,8 +1,8 @@
 import React from 'react';
 import Sidebar from '../interface/Sidebar';
-import Social from './elements/Social';
+import MyPosts from './elements/MyPosts';
 
-function SocialPage({ onLogout }) {
+function MyPostsPage({ onLogout }) {
     return (
         <div className="row">
             {/* Sidebar */}
@@ -11,10 +11,10 @@ function SocialPage({ onLogout }) {
             </div>
             {/* Main Content */}
             <div className="col-md-9 col-xl-10 col-9">
-                <Social />
+                <MyPosts />
             </div>
         </div>
     );
 }
 
-export default SocialPage;
+export default MyPostsPage;

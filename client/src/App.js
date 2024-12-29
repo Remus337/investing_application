@@ -5,6 +5,7 @@ import Login from './components/user_management/Login';
 import Validate from './components/user_management/Validate';
 import ChartsPage from './components/charts';
 import SocialPage from './components/social';
+import MyPostsPage from './components/myposts';
 import axios from 'axios';
 
 function App() {
@@ -97,6 +98,16 @@ function App() {
         element={
           isAuthenticated ? (
             <SocialPage onLogout={handleLogout} />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/myposts"
+        element={
+          isAuthenticated ? (
+            <MyPostsPage onLogout={handleLogout} />
           ) : (
             <Navigate to="/login" />
           )

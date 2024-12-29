@@ -79,16 +79,47 @@ router.put('/:id', (req, res) => {
 
 // Get all posts
 router.get('/', (req, res) => {
+    const { user_id } = req.query;
+
+    let query = `
+        SELECT posts.*, users.nickname AS author_nickname 
+        FROM posts 
+        JOIN users ON posts.user_id = users.id
+    `;
+    const params = [];
+
+    if (user_id) {
+        query += ' WHERE posts.user_id = ?';
+        params.push(user_id);
+    }
+
+    db.query(query, params, (err, results) => {
+        if (err) {
+            console.error('Error fetching posts:', err);
+            return res.status(500).send('Error fetching posts');
+        }
+        res.status(200).json(results);
+    });
+});
+
+router.get('/:id', (req, res) => {
+    const { id } = req.params;
+
     db.query(
-        `SELECT posts.*, users.nickname AS author_nickname 
-         FROM posts 
-         JOIN users ON posts.user_id = users.id`,
+        `SELECT posts.*, users.nickname AS author_nickname
+         FROM posts
+         JOIN users ON posts.user_id = users.id
+         WHERE posts.id = ?`,
+        [id],
         (err, results) => {
             if (err) {
-                console.error('Error fetching posts:', err);
-                return res.status(500).send('Error fetching posts');
+                console.error('Error fetching post:', err);
+                return res.status(500).send('Error fetching post');
             }
-            res.status(200).json(results);
+            if (results.length === 0) {
+                return res.status(404).send('Post not found');
+            }
+            res.status(200).json(results[0]);
         }
     );
 });
