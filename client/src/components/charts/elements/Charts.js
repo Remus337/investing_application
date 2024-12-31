@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Select from 'react-select';
 import StockChart from './StockChart';
 
 function Charts() {
@@ -20,12 +21,16 @@ function Charts() {
   const fetchTickerOptions = async () => {
     try {
       const response = await axios.get('http://localhost:3001/tickers');
-      setTickerOptions(response.data.map((ticker) => ticker.name));
+      const options = response.data.map(ticker => ({
+        label: `${ticker.name} (${ticker.ticker})`, // Display name and ticker in the select
+        value: ticker.ticker, // Use ticker for the value
+      }));
+      setTickerOptions(options);
     } catch (error) {
       console.error('Failed to fetch ticker options:', error);
     }
   };
-  
+
   // Fetch stock data for the selected tickers
   const fetchStockData = async (selectedTickers) => {
     setLoading(true);
@@ -59,12 +64,12 @@ function Charts() {
   };
 
   // Handle ticker selection changes
-  const handleTickerChange = (selectedTickers) => {
-    if (selectedTickers.length > 5) {
+  const handleTickerChange = (selectedOptions) => {
+    if (selectedOptions.length > 5) {
       alert('You can select up to 5 tickers.');
       return;
     }
-    setTickers(selectedTickers);
+    setTickers(selectedOptions.map(option => option.value)); // Store only the ticker values
   };
 
   // Fetch new data when user submits a new selection
@@ -79,23 +84,17 @@ function Charts() {
       <div className="d-flex justify-content-between align-items-center mb-3">
         {/* Ticker Selector */}
         <div className="ticker-selector">
-          <label htmlFor="tickerSelect" className="form-label">Select Tickers:</label>
-          <select
+          <Select
             id="tickerSelect"
-            className="form-select"
-            multiple
-            value={tickers}
-            onChange={(e) =>
-              handleTickerChange([...e.target.selectedOptions].map((option) => option.value))
-            }
-            disabled={searchDisabled}
-          >
-            {tickerOptions.map((ticker) => (
-              <option key={ticker} value={ticker}>
-                {ticker}
-              </option>
-            ))}
-          </select>
+            isMulti
+            value={tickerOptions.filter(option => tickers.includes(option.value))} // Display selected tickers
+            options={tickerOptions}
+            onChange={handleTickerChange}
+            isDisabled={searchDisabled}
+            placeholder="Search and select tickers"
+            getOptionLabel={(e) => e.label} // Show the ticker name and symbol
+            closeMenuOnSelect={false}
+          />
         </div>
 
         {/* Search Button */}

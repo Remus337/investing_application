@@ -78,7 +78,7 @@ router.get('/fetch', async (req, res) => {
 // Fetch all tickers from the database
 router.get('/', async (req, res) => {
     try {
-        const [results] = await db.promise().query('SELECT * FROM tickers ORDER BY ticker ASC');
+        const [results] = await db.promise().query('SELECT * FROM tickers WHERE active = 1 ORDER BY ticker ASC');
         res.json(results);
     } catch (error) {
         console.error('Error fetching tickers:', error.message);
