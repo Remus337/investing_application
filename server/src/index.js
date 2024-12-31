@@ -1,12 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-const { fetchAllStocksData } = require('./routes/stocks');
+const { fetchAllStocksData } = require('./routes/charts/stocks');
 const registerRoute = require('./routes/register');
 const loginRoute = require('./routes/login');
 const validateRoute = require('./routes/validate');
 const logoutRoute = require('./routes/logout');
 const postsRoutes = require('./routes/social/posts');
 const commentsRoutes = require('./routes/social/comments');
+const tickersRoutes = require('./routes/charts/tickers'); 
 
 const app = express();
 const port = 3001;
@@ -22,30 +23,23 @@ app.use('/validate', validateRoute);
 app.use('/logout', logoutRoute);
 app.use('/posts', postsRoutes);
 app.use('/comments', commentsRoutes);
+app.use('/tickers', tickersRoutes);
 
 // Existing stocks endpoint
 app.get('/stocks', async (req, res) => {
+    const { tickers } = req.query;
+    if (!tickers) {
+        return res.status(400).send('Tickers are required.');
+    }
+
+    const tickerList = tickers.split(',');
+    const today = new Date().toISOString().slice(0, 10);
     try {
-        const data = await fetchAllStocksData(['AAPL', 'MSFT', 'GOOGL', 'TSLA', 'AMZN', 'NFLX', 'NVDA', 'AMD'], '2023-06-01', today);
-        res.format({
-            'text/html': function () {
-                let html = '<h1>Stock Prices</h1>';
-                if (data && Array.isArray(data)) {
-                    data.forEach(stock => {
-                        html += `<h2>${stock.symbol}</h2><pre>${JSON.stringify(stock.data, null, 2)}</pre>`;
-                    });
-                } else {
-                    html += '<p>No data available</p>';
-                }
-                res.send(html);
-            },
-            'application/json': function () {
-                res.json(data);
-            }
-        });
+        const data = await fetchAllStocksData(tickerList, '2023-06-01', today);
+        res.json(data);
     } catch (error) {
-        console.error('Error while processing data:', error);
-        res.status(500).send('Failed to fetch stock data: ' + error.message);
+        console.error('Error fetching stock data:', error);
+        res.status(500).send('Failed to fetch stock data.');
     }
 });
 
