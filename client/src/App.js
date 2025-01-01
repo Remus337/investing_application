@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import Register from './components/user_management/Register';
-import Login from './components/user_management/Login';
-import Validate from './components/user_management/Validate';
+import Register from './components/login_process/Register';
+import Login from './components/login_process/Login';
+import Validate from './components/login_process/Validate';
 import ChartsPage from './components/charts';
 import SocialPage from './components/social';
 import MyPostsPage from './components/myposts';
+import MyProfilePage from './components/user_management';
 import axios from 'axios';
 
 function App() {
@@ -108,6 +109,16 @@ function App() {
         element={
           isAuthenticated ? (
             <MyPostsPage onLogout={handleLogout} />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/myprofile"
+        element={
+          isAuthenticated ? (
+            <MyProfilePage onLogout={handleLogout} />
           ) : (
             <Navigate to="/login" />
           )

@@ -17,7 +17,6 @@ function Login({ setIsAuthenticated, onSuccess }) {
       const response = await axios.post('http://localhost:3001/login', formData);
 
       if (response.data.is_validated) {
-        localStorage.setItem('nickname', response.data.nickname); // Save to localStorage
         localStorage.setItem('user_id', response.data.user_id); // Save to localStorage
         setIsAuthenticated(true);
         onSuccess(); // Navigate to Charts page

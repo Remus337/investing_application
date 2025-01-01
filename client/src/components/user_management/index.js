@@ -1,8 +1,8 @@
 import React from 'react';
 import Sidebar from '../interface/Sidebar';
-import Charts from './elements/Charts';
+import MyProfile from './elements/MyProfile';
 
-function ChartsPage({ onLogout }) {
+function MyProfilePage({ onLogout }) {
     return (
         <div className="row row-no-gutters">
             {/* Sidebar */}
@@ -11,10 +11,10 @@ function ChartsPage({ onLogout }) {
             </div>
             {/* Main Content */}
             <div className="col-md-9 col-xl-10 col-9 px-2">
-                <Charts />
+                <MyProfile />
             </div>
         </div>
     );
 }
 
-export default ChartsPage;
+export default MyProfilePage;

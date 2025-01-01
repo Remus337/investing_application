@@ -1,13 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const { fetchAllStocksData } = require('./routes/charts/stocks');
-const registerRoute = require('./routes/register');
-const loginRoute = require('./routes/login');
-const validateRoute = require('./routes/validate');
-const logoutRoute = require('./routes/logout');
+const registerRoute = require('./routes/login_process/register');
+const loginRoute = require('./routes/login_process/login');
+const validateRoute = require('./routes/login_process/validate');
+const logoutRoute = require('./routes/login_process/logout');
 const postsRoutes = require('./routes/social/posts');
 const commentsRoutes = require('./routes/social/comments');
 const tickersRoutes = require('./routes/charts/tickers'); 
+const profileRoutes = require('./routes/user_management/profile');
 
 const app = express();
 const port = 3001;
@@ -24,6 +25,7 @@ app.use('/logout', logoutRoute);
 app.use('/posts', postsRoutes);
 app.use('/comments', commentsRoutes);
 app.use('/tickers', tickersRoutes);
+app.use('/profile', profileRoutes);
 
 // Existing stocks endpoint
 app.get('/stocks', async (req, res) => {

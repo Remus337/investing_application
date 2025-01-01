@@ -1,12 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import axios from 'axios';
 
 function Sidebar({ onLogout }) {
 
-  const nickname = useState(() => {
-    return localStorage.getItem('nickname');
-  });
+  const userId = Number(localStorage.getItem('user_id'));
+  const [nickname, setNickname] = useState('');
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3001/profile/${userId}`);
+      setNickname(response.data.nickname);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
 
   return (
     <div className="container-fluid px-0 sticky-top">
@@ -60,6 +73,13 @@ function Sidebar({ onLogout }) {
                 <span className="d-none d-sm-inline mx-1">{nickname}</span>
               </a>
               <ul className="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                <li>
+                  <Link className='link-underline link-underline-opacity-0' to="/myprofile">
+                    <button className="dropdown-item">
+                      My Profile
+                    </button>
+                  </Link>
+                </li>
                 <li>
                   <Link className='link-underline link-underline-opacity-0' to="/myposts">
                     <button className="dropdown-item">
