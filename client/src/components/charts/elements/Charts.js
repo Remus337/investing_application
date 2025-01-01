@@ -81,11 +81,12 @@ function Charts() {
 
   return (
     <div className="charts-page">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="d-flex justify-content-between align-items-center mb-3 pt-1">
         {/* Ticker Selector */}
-        <div className="ticker-selector">
+        <div className="ticker-selector input-group">
           <Select
             id="tickerSelect"
+            className='form-control'
             isMulti
             value={tickerOptions.filter(option => tickers.includes(option.value))} // Display selected tickers
             options={tickerOptions}
