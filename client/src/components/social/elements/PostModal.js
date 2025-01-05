@@ -3,7 +3,7 @@ import axios from 'axios';
 import CommentsSection from './CommentSection';
 
 function PostModal({ post, onClose, onDeletePost, onEditPost }) {
-    const userId = Number(localStorage.getItem('user_id'));
+    const userId = Number(sessionStorage.getItem('user_id'));
     const [postDetails, setPostDetails] = useState(post);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');

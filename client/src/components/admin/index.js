@@ -1,8 +1,8 @@
 import React from 'react';
 import Sidebar from '../interface/Sidebar';
-import MyPosts from './elements/MyPosts';
+import AdminPanel from './elements/AdminPanel';
 
-function MyPostsPage({ onLogout, isAdmin, Nickname }) {
+function Admin({ onLogout, isAdmin, Nickname, isSuperAdmin }) {
     return (
         <div className="row row-no-gutters">
             {/* Sidebar */}
@@ -11,10 +11,10 @@ function MyPostsPage({ onLogout, isAdmin, Nickname }) {
             </div>
             {/* Main Content */}
             <div className="col-md-9 col-xl-10 col-9 px-2">
-                <MyPosts />
+                <AdminPanel isSuperAdmin={isSuperAdmin}/>
             </div>
         </div>
     );
 }
 
-export default MyPostsPage;
+export default Admin;

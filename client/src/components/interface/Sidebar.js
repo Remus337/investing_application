@@ -3,23 +3,7 @@ import { Link } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import axios from 'axios';
 
-function Sidebar({ onLogout }) {
-
-  const userId = Number(localStorage.getItem('user_id'));
-  const [nickname, setNickname] = useState('');
-
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3001/profile/${userId}`);
-      setNickname(response.data.nickname);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    }
-  };
+function Sidebar({ onLogout, isAdmin, Nickname }) {
 
   return (
     <div className="container-fluid px-0 sticky-top">
@@ -70,9 +54,18 @@ function Sidebar({ onLogout }) {
                   height="30"
                   className="rounded-circle"
                 />
-                <span className="d-none d-sm-inline mx-1">{nickname}</span>
+                <span className="d-none d-sm-inline mx-1">{Nickname}</span>
               </a>
               <ul className="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                {isAdmin === 1 && (
+                  <li>
+                    <Link className='link-underline link-underline-opacity-0' to="/admin">
+                      <button className="dropdown-item">
+                        Admin Panel
+                      </button>
+                    </Link>
+                  </li>
+                )}
                 <li>
                   <Link className='link-underline link-underline-opacity-0' to="/myprofile">
                     <button className="dropdown-item">

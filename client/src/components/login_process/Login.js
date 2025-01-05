@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function Login({ setIsAuthenticated, onSuccess }) {
+function Login({ setIsAuthenticated, setIsValidated, onSuccess, setUserId }) {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -17,11 +17,14 @@ function Login({ setIsAuthenticated, onSuccess }) {
       const response = await axios.post('http://localhost:3001/login', formData);
 
       if (response.data.is_validated) {
-        localStorage.setItem('user_id', response.data.user_id); // Save to localStorage
+        sessionStorage.setItem('user_id', response.data.user_id); // Save to sessionStorage
         setIsAuthenticated(true);
+        setIsValidated(true);
+        setUserId(response.data.user_id);
         onSuccess(); // Navigate to Charts page
       } else {
         setIsAuthenticated(false);
+        setIsValidated(false);
         navigate('/validate', { state: { email: formData.email } }); // Redirect with email
       }
     } catch (error) {

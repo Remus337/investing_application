@@ -2,6 +2,8 @@ const db = require('./db');
 
 const migrations = async () => {
     try {
+        console.log('Connected to the MySQL database');
+
         // Check and create `users` table
         await db.promise().query(`
             CREATE TABLE IF NOT EXISTS users (
@@ -15,9 +17,23 @@ const migrations = async () => {
                 is_validated TINYINT(4) DEFAULT 0,
                 validation_key VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                 INDEX (email)
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         `);
         console.log('Users table ensured.');
+
+        // Check if `is_superadmin` column exists and add if not
+        const [columns] = await db.promise().query(`
+            SHOW COLUMNS FROM users LIKE 'is_superadmin';
+        `);
+
+        if (columns.length === 0) {
+            await db.promise().query(`
+                ALTER TABLE users ADD COLUMN is_superadmin TINYINT(4) DEFAULT 0;
+            `);
+            console.log('Added `is_superadmin` column to users table.');
+        } else {
+            console.log('`is_superadmin` column already exists.');
+        }
 
         // Check and create `posts` table
         await db.promise().query(`
@@ -28,7 +44,7 @@ const migrations = async () => {
                 content TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         `);
         console.log('Posts table ensured.');
 
@@ -42,7 +58,7 @@ const migrations = async () => {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         `);
         console.log('Comments table ensured.');
 
@@ -50,19 +66,19 @@ const migrations = async () => {
         await db.promise().query(`
             CREATE TABLE IF NOT EXISTS tickers (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                ticker VARCHAR(10) NOT NULL UNIQUE, -- Ensures uniqueness for tickers
-                name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, -- Support for all languages
+                ticker VARCHAR(10) NOT NULL UNIQUE,
+                name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
                 market VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
                 locale VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
                 currency VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                 active BOOLEAN DEFAULT TRUE,
                 last_updated_utc DATETIME DEFAULT NULL,
-                INDEX (ticker) -- Index for faster queries
+                INDEX (ticker)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         `);
         console.log('Tickers table ensured.');
 
-        // Optional: Update existing tables to support utf8mb4 (in case they already exist)
+        // Update all tables to ensure utf8mb4 support
         const tables = ['users', 'posts', 'comments', 'tickers'];
         for (const table of tables) {
             await db.promise().query(`

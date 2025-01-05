@@ -4,7 +4,7 @@ import AddEditPostModal from './AddEditPostModal';
 import PostModal from './PostModal';
 
 function Social() {
-    const userId = Number(localStorage.getItem('user_id')); // Convert to a number
+    const userId = Number(sessionStorage.getItem('user_id')); // Convert to a number
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null); // Post to view in modal
@@ -105,8 +105,8 @@ function Social() {
                                 <h3 className="card-title">{post.title}</h3>
                                 <p className="card-subtitle mb-2 text-muted fs-6 fw-light">By: {post.author_nickname}</p>
                                 <p className="card-text">
-                                    {post.content.length > 100
-                                        ? `${post.content.slice(0, 100)}... Read More`
+                                    {post.content.length > 150
+                                        ? `${post.content.slice(0, 150)}... Read More`
                                         : post.content}
                                 </p>
                             </div>

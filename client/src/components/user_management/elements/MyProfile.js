@@ -3,7 +3,7 @@ import axios from 'axios';
 import ChangePasswordModal from './ChangePasswordModal';
 
 function MyProfile() {
-    const userId = Number(localStorage.getItem('user_id')); // Get the user ID from local storage
+    const userId = Number(sessionStorage.getItem('user_id')); // Get the user ID from local storage
     const [profile, setProfile] = useState({
         name: '',
         surname: '',

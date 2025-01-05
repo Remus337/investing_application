@@ -8,7 +8,7 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
-        const [results] = await db.promise().query('SELECT id, name, surname, email, nickname FROM users WHERE id = ?', [id]);
+        const [results] = await db.promise().query('SELECT id, name, surname, email, nickname, is_admin, is_superadmin FROM users WHERE id = ?', [id]);
 
         if (results.length === 0) {
             return res.status(404).send({ error: 'User not found' });
@@ -23,12 +23,12 @@ router.get('/:id', async (req, res) => {
 
 // Update user profile
 router.put('/:id', async (req, res) => {
-    const { id } = req.params; // Corrected parameter
+    const { id } = req.params;
     const { name, surname, email, nickname } = req.body;
     try {
         const [result] = await db.promise().query(
             'UPDATE users SET name = ?, surname = ?, email = ?, nickname = ? WHERE id = ?',
-            [name, surname, email, nickname, id] // Use `id` instead of `userId`
+            [name, surname, email, nickname, id]
         );
 
         if (result.affectedRows === 0) {

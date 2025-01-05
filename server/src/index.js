@@ -9,6 +9,7 @@ const postsRoutes = require('./routes/social/posts');
 const commentsRoutes = require('./routes/social/comments');
 const tickersRoutes = require('./routes/charts/tickers'); 
 const profileRoutes = require('./routes/user_management/profile');
+const adminUsersRoutes = require('./routes/user_management/users');
 
 const app = express();
 const port = 3001;
@@ -26,6 +27,7 @@ app.use('/posts', postsRoutes);
 app.use('/comments', commentsRoutes);
 app.use('/tickers', tickersRoutes);
 app.use('/profile', profileRoutes);
+app.use('/users', adminUsersRoutes);
 
 // Existing stocks endpoint
 app.get('/stocks', async (req, res) => {
