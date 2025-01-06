@@ -38,18 +38,17 @@ function AdminPanel({ isSuperAdmin }) {
             fetchUsers();
         } catch (error) {
             console.error('Error updating user data:', error);
+            if (error.response.status === 400) {
+                alert('Cannot change personal data for a superadmin.');
+            }
         }
     };
 
     const handleToggleAdmin = async (id, isAdmin) => {
         const user = users.find((user) => user.id === id);
-    
+
         if (!user) {
             console.error('User not found for toggling admin status');
-            return;
-        }
-        if (isSuperAdmin === 1) {
-            alert('Cannot change admin status for a superadmin.');
             return;
         }
         try {
@@ -60,9 +59,12 @@ function AdminPanel({ isSuperAdmin }) {
             fetchUsers();
         } catch (error) {
             console.error('Error toggling admin status:', error);
+            if (error.response.status === 400) {
+                alert(error.response.data);
+            }
         }
     };
-    
+
     const handleDeleteUser = async (id) => {
         if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
             return;
@@ -100,7 +102,7 @@ function AdminPanel({ isSuperAdmin }) {
                         <th>Surname</th>
                         <th>Email</th>
                         <th>Nickname</th>
-                        {isSuperAdmin && <th>Is Admin</th>}
+                        {isSuperAdmin === 1 && <th>Is Admin</th>}
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -143,7 +145,7 @@ function AdminPanel({ isSuperAdmin }) {
                                     }
                                 />
                             </td>
-                            {isSuperAdmin && (
+                            {isSuperAdmin === 1 && (
                                 <td>
                                     <input
                                         type="checkbox"

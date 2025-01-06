@@ -45,7 +45,7 @@ router.put('/:id', async (req, res) => {
         if (currentData[0].is_superadmin === 1 && is_admin !== undefined) {
             return res
                 .status(400)
-                .send('Cannot change admin status for a superadmin.');
+                .send('Cannot change personal data for a superadmin.');
         }
 
         const updatedData = {
@@ -63,7 +63,6 @@ router.put('/:id', async (req, res) => {
 
         res.status(200).send('User data updated successfully.');
     } catch (error) {
-        console.error('Error updating user data:', error);
         res.status(500).send('Failed to update user data.');
     }
 });
@@ -72,10 +71,17 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
+        const [currentData] = await db.promise().query( 'SELECT is_superadmin FROM users WHERE id = ?', [id]);
+
+        if (currentData[0].is_superadmin === 1 && is_admin !== undefined) {
+            return res
+                .status(400)
+                .send('Cannot change personal data for a superadmin.');
+        }
+
         await db.promise().query('DELETE FROM users WHERE id = ?', [id]);
         res.status(200).send('User deleted successfully.');
     } catch (error) {
-        console.error('Error deleting user:', error);
         res.status(500).send('Failed to delete user.');
     }
 });
