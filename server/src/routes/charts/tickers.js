@@ -1,10 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const db = require('../../config/db');
 const router = express.Router();
 
-const POLYGON_API_KEY = 'ArRNBD4RwUZFA5kE1Zu7IZiTwbFaHJl4';
-const TICKERS_API_URL = 'https://api.polygon.io/v3/reference/tickers';
+const POLYGON_API_KEY = process.env.POLYGON_API_KEY;
+const TICKERS_API_URL = process.env.POLYGON_TICKERS_URL;
 const RATE_LIMIT_DELAY = 15000;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

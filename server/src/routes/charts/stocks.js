@@ -1,7 +1,8 @@
+require('dotenv').config();
 const axios = require('axios');
 
-const POLYGON_API_KEY = 'ArRNBD4RwUZFA5kE1Zu7IZiTwbFaHJl4';
-const BASE_URL = 'https://api.polygon.io';
+const POLYGON_API_KEY = process.env.POLYGON_API_KEY;
+const BASE_URL = process.env.POLYGON_BASE_URL;
 const cache = {};
 
 async function getStockPricesForDateRange(symbol, startDate, endDate) {

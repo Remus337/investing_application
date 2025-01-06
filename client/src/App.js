@@ -5,6 +5,7 @@ import Login from './components/login_process/Login';
 import Validate from './components/login_process/Validate';
 import ChartsPage from './components/charts';
 import SocialPage from './components/social';
+import InvestBotPage from './components/investbot';
 import MyPostsPage from './components/myposts';
 import MyProfilePage from './components/user_management';
 import Admin from './components/admin';
@@ -126,6 +127,16 @@ function App() {
         element={
           isAuthenticated ? (
             <SocialPage onLogout={handleLogout} isAdmin={is_admin} Nickname={nickname} />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/investbot"
+        element={
+          isAuthenticated ? (
+            <InvestBotPage onLogout={handleLogout} isAdmin={is_admin} Nickname={nickname} />
           ) : (
             <Navigate to="/login" />
           )

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import axios from 'axios';
 
 function Sidebar({ onLogout, isAdmin, Nickname }) {
 
@@ -11,7 +10,7 @@ function Sidebar({ onLogout, isAdmin, Nickname }) {
         <div className="col-auto col-md-12 col-xl-12 px-sm-2 px-0">
           <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
             <a href="/" className="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-              <span className="fs-5 d-none d-sm-inline">Grzyb</span>
+              <span className="fs-5 d-none d-sm-inline">NAI</span>
             </a>
             <ul className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
               <li className="nav-item">
@@ -19,18 +18,10 @@ function Sidebar({ onLogout, isAdmin, Nickname }) {
                   <i className="fs-4 bi bi-bar-chart-fill"></i> <span className="ms-1 d-none d-sm-inline">Charts</span>
                 </Link>
               </li>
-              <li>
-                <a href="#submenu1" data-bs-toggle="collapse" className="nav-link px-0 align-middle">
-                  <i className="fs-4 bi-speedometer2"></i> <span className="ms-1 d-none d-sm-inline">Dashboard</span>
-                </a>
-                <ul className="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
-                  <li className="w-100">
-                    <a href="#" className="nav-link px-0"> <span className="d-none d-sm-inline">Item</span> 1 </a>
-                  </li>
-                  <li>
-                    <a href="#" className="nav-link px-0"> <span className="d-none d-sm-inline">Item</span> 2 </a>
-                  </li>
-                </ul>
+              <li className="nav-item">
+                <Link to="/investbot" className="nav-link align-middle px-0">
+                  <i className="fs-4 bi bi bi-robot"></i> <span className="ms-1 d-none d-sm-inline">InvestBot</span>
+                </Link>
               </li>
               <li className="nav-item">
                 <Link to="/social" className="nav-link align-middle px-0">
@@ -47,13 +38,7 @@ function Sidebar({ onLogout, isAdmin, Nickname }) {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <img
-                  src="https://github.com/mdo.png"
-                  alt="user"
-                  width="30"
-                  height="30"
-                  className="rounded-circle"
-                />
+                <i className="bi bi-person-circle fs-4"></i>
                 <span className="d-none d-sm-inline mx-1">{Nickname}</span>
               </a>
               <ul className="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
