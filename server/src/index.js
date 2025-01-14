@@ -8,6 +8,7 @@ const logoutRoute = require('./routes/login_process/logout');
 const postsRoutes = require('./routes/social/posts');
 const commentsRoutes = require('./routes/social/comments');
 const tickersRoutes = require('./routes/charts/tickers'); 
+const analyseRoute = require('./routes/charts/analyse'); 
 const profileRoutes = require('./routes/user_management/profile');
 const adminUsersRoutes = require('./routes/user_management/users');
 const investBotRoute = require('./routes/investbot/investbot');
@@ -34,6 +35,7 @@ app.use('/users', adminUsersRoutes);
 app.use('/investbot', investBotRoute);
 app.use('/payu', payuRoutes);
 app.use('/shares-management', shareManagementRoutes);
+app.use('/analysis', analyseRoute);
 
 // Existing stocks endpoint
 app.get('/stocks', async (req, res) => {

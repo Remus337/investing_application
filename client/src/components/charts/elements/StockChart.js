@@ -17,6 +17,7 @@ const StockChart = ({ stockData }) => {
     email: '',
     nickname: '',
   });
+  const [analysisMessages, setAnalysisMessages] = useState({}); // Store analysis messages for each stock
 
   useEffect(() => {
     fetchProfile();
@@ -59,6 +60,37 @@ const StockChart = ({ stockData }) => {
     }
   };
 
+  const fetchAnalysis = async (minimizedStockData) => {
+    try {
+      const response = await axios.post('http://localhost:3001/analysis/analyse', { minimizedStockData });
+      const results = response.data.analysisResults;
+
+      const updatedMessages = results.reduce((acc, result) => {
+        acc[result.ticker] = result.analysis;
+        return acc;
+      }, {});
+
+      setAnalysisMessages((prev) => ({ ...prev, ...updatedMessages }));
+    } catch (error) {
+      console.error('Error fetching analysis:', error.response?.data || error.message);
+    }
+  };
+
+  useEffect(() => {
+    // Minimize stock data for analysis and send to the server
+    const minimizedStockData = stockData.map((stock) => ({
+      symbol: stock.symbol,
+      data: stock.data.map((entry) => ({
+        t: entry.t, // Timestamp
+        c: entry.c, // Closing price
+      })),
+    }));
+
+    if (minimizedStockData.length > 0) {
+      fetchAnalysis(minimizedStockData);
+    }
+  }, [stockData]);
+
   const handleBuyShares = async (ticker, pricePerShareUSD) => {
     try {
       const priceInPLN = (pricePerShareUSD * exchangeRate).toFixed(2); // This is a string
@@ -89,32 +121,33 @@ const StockChart = ({ stockData }) => {
 
   return (
     <div>
-      {stockData.map(stock => {
+      {stockData.map((stock) => {
         const lastClosePriceUSD = stock.data[stock.data.length - 1]?.c || 0;
         const lastClosePricePLN = (lastClosePriceUSD * exchangeRate).toFixed(2); // Convert to PLN
+        const analysis = analysisMessages[stock.symbol] || [];
 
         const chartData = {
-          labels: stock.data.map(item => new Date(item.t).toLocaleDateString()),
+          labels: stock.data.map((item) => new Date(item.t).toLocaleDateString()),
           datasets: [
             {
               label: `${stock.symbol} Close Price`,
-              data: stock.data.map(item => item.c),
+              data: stock.data.map((item) => item.c),
               borderColor: 'rgb(75, 192, 192)',
               backgroundColor: 'rgba(75, 192, 192, 0.5)',
             },
             {
               label: `${stock.symbol} High Price`,
-              data: stock.data.map(item => item.h),
+              data: stock.data.map((item) => item.h),
               borderColor: 'rgb(255, 99, 132)',
               backgroundColor: 'rgba(255, 99, 132, 0.5)',
             },
             {
               label: `${stock.symbol} Low Price`,
-              data: stock.data.map(item => item.l),
+              data: stock.data.map((item) => item.l),
               borderColor: 'rgb(255, 159, 64)',
               backgroundColor: 'rgba(255, 159, 64, 0.5)',
-            }
-          ]
+            },
+          ],
         };
 
         return (
@@ -136,6 +169,20 @@ const StockChart = ({ stockData }) => {
               >
                 Buy
               </button>
+            </div>
+            <div>
+              <h3>Analysis:</h3>
+              {analysis.length > 0 ? (
+                <ul>
+                  {analysis.map((item, index) => (
+                    <li key={index} style={{ color: item.summary.includes('decreased') ? 'red' : item.summary.includes('increased') ? 'green' : 'black' }}>
+                      {item.summary}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Loading analysis...</p>
+              )}
             </div>
           </div>
         );
