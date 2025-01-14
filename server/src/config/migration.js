@@ -16,7 +16,8 @@ const migrations = async () => {
                 is_admin TINYINT(4) DEFAULT 0,
                 is_validated TINYINT(4) DEFAULT 0,
                 validation_key VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                INDEX (email)
+                INDEX (email),
+                UNIQUE (nickname)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         `);
         console.log('Users table ensured.');
@@ -77,6 +78,44 @@ const migrations = async () => {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         `);
         console.log('Tickers table ensured.');
+
+        await db.promise().query(`
+            CREATE TABLE IF NOT EXISTS transactions (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            transaction_id VARCHAR(11) DEFAULT NULL,
+            ticker VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+            amount DECIMAL(10, 2) NOT NULL,
+            amount_remained DECIMAL(10, 2) DEFAULT 0,
+            price_per_share DECIMAL(10, 2) NOT NULL,
+            total_price DECIMAL(10, 2) NOT NULL,
+            payment_status ENUM('pending', 'completed', 'failed') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
+            payment_order_id VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            payment_account VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            FOREIGN KEY (ticker) REFERENCES tickers(ticker),
+            UNIQUE (transaction_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        `);
+        console.log('Transactions table ensured.');
+
+        // Check and create `transactions_sold` table
+        await db.promise().query(`
+            CREATE TABLE IF NOT EXISTS transactions_sold (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            ticker VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+            amount DECIMAL(10, 2) NOT NULL,
+            price_per_share DECIMAL(10, 2) NOT NULL,
+            total_price DECIMAL(10, 2) NOT NULL,
+            gain_loss DECIMAL(10, 2) DEFAULT 0, -- Gain/Loss column
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            FOREIGN KEY (ticker) REFERENCES tickers(ticker)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        `);
+        console.log('Transactions_sold table ensured.');
 
         // Update all tables to ensure utf8mb4 support
         const tables = ['users', 'posts', 'comments', 'tickers'];

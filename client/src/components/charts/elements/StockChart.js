@@ -1,13 +1,98 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import axios from 'axios';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const StockChart = ({ stockData }) => {
+  const location = useLocation();
+  const [amounts, setAmounts] = useState({});
+  const [transactionMessage, setTransactionMessage] = useState('');
+  const [exchangeRate, setExchangeRate] = useState(1); // Default exchange rate to 1
+  const [profile, setProfile] = useState({
+    name: '',
+    surname: '',
+    email: '',
+    nickname: '',
+  });
+
+  useEffect(() => {
+    fetchProfile();
+    fetchExchangeRate();
+  }, []);
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const transactionId = query.get('transactionId');
+
+    if (transactionId) {
+      axios.get(`http://localhost:3001/payu/payment-confirmation?transactionId=${transactionId}`)
+        .then(response => {
+          setTransactionMessage(response.data.message);
+        })
+        .catch(error => {
+          console.error('Error verifying transaction:', error.response?.data || error.message);
+          setTransactionMessage('Failed to verify transaction.');
+        });
+    }
+  }, [location.search]);
+
+  // Fetch the profile from the backend
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3001/profile/${sessionStorage.getItem('user_id')}`);
+      setProfile(response.data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
+  // Fetch the USD to PLN exchange rate
+  const fetchExchangeRate = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/shares-management/get-pln-exchange-rate');
+      setExchangeRate(response.data.exchangeRate); // Update the exchange rate
+    } catch (error) {
+      console.error('Error fetching exchange rate:', error);
+    }
+  };
+
+  const handleBuyShares = async (ticker, pricePerShareUSD) => {
+    try {
+      const priceInPLN = (pricePerShareUSD * exchangeRate).toFixed(2); // This is a string
+      const formattedPriceInPLN = parseFloat(priceInPLN); // Ensure it is a float
+      console.log('Buying shares:', ticker, amounts[ticker], priceInPLN, exchangeRate);
+      const response = await axios.post('http://localhost:3001/payu/buy', {
+        user_id: sessionStorage.getItem('user_id'),
+        ticker,
+        amount: parseFloat(amounts[ticker] || 0),
+        payment_account: profile.email,
+        price_per_share: formattedPriceInPLN, // Use converted price in PLN
+      });
+
+      alert('Redirecting to payment...');
+      window.location.href = response.data.redirect_url;
+    } catch (error) {
+      console.error('Error buying shares:', error.response?.data || error.message);
+      alert('Failed to buy shares.');
+    }
+  };
+
+  const handleAmountChange = (ticker, value) => {
+    setAmounts((prev) => ({
+      ...prev,
+      [ticker]: value,
+    }));
+  };
+
   return (
     <div>
       {stockData.map(stock => {
+        const lastClosePriceUSD = stock.data[stock.data.length - 1]?.c || 0;
+        const lastClosePricePLN = (lastClosePriceUSD * exchangeRate).toFixed(2); // Convert to PLN
+
         const chartData = {
           labels: stock.data.map(item => new Date(item.t).toLocaleDateString()),
           datasets: [
@@ -36,6 +121,22 @@ const StockChart = ({ stockData }) => {
           <div key={stock.symbol}>
             <h2>{stock.symbol} Stock Data Chart</h2>
             <Line data={chartData} options={{ responsive: true, scales: { y: { beginAtZero: false } } }} />
+            <div>
+              <p>Last Close Price: ${lastClosePriceUSD.toFixed(2)} (~{lastClosePricePLN} PLN)</p>
+              <input
+                type="number"
+                step="0.01"
+                placeholder="Amount of shares"
+                value={amounts[stock.symbol] || ''}
+                onChange={(e) => handleAmountChange(stock.symbol, e.target.value)}
+              />
+              <button
+                onClick={() => handleBuyShares(stock.symbol, lastClosePriceUSD)}
+                disabled={!amounts[stock.symbol] || lastClosePriceUSD === 0}
+              >
+                Buy
+              </button>
+            </div>
           </div>
         );
       })}

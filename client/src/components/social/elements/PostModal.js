@@ -8,6 +8,7 @@ function PostModal({ post, onClose, onDeletePost, onEditPost }) {
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
     const [loading, setLoading] = useState(false);
+    const [rewriting, setRewriting] = useState(false);
 
     useEffect(() => {
         if (post) {
@@ -51,6 +52,26 @@ function PostModal({ post, onClose, onDeletePost, onEditPost }) {
             setNewComment('');
         } catch (error) {
             console.error('Error adding comment:', error);
+        }
+    };
+
+    const handleRewriteComment = async () => {
+        if (!newComment.trim()) {
+            alert('Comment is empty. Please write something before rewriting.');
+            return;
+        }
+
+        setRewriting(true);
+        try {
+            const response = await axios.post('http://localhost:3001/investbot/rewrite-comment', {
+                comment: newComment,
+            });
+            setNewComment(response.data.rewrittenComment);
+        } catch (error) {
+            console.error('Error rewriting comment:', error);
+            alert('Failed to rewrite comment. Please try again.');
+        } finally {
+            setRewriting(false);
         }
     };
 
@@ -106,7 +127,7 @@ function PostModal({ post, onClose, onDeletePost, onEditPost }) {
                             postAuthorId={postDetails.user_id}
                         />
                     </div>
-                    <div className='sticky-bottom bg-light pt-3 rounded-bottom'>
+                    <div className="sticky-bottom bg-light pt-3 rounded-bottom">
                         <div className="add-comment-section mb-3 px-2">
                             <div className="input-group">
                                 <input
@@ -119,9 +140,16 @@ function PostModal({ post, onClose, onDeletePost, onEditPost }) {
                                 <button
                                     className="btn btn-primary"
                                     onClick={handleAddComment}
-                                    disabled={!newComment.trim()}
+                                    disabled={!newComment.trim() || rewriting}
                                 >
                                     Add
+                                </button>
+                                <button
+                                    className="btn btn-success"
+                                    onClick={handleRewriteComment}
+                                    disabled={!newComment.trim() || rewriting}
+                                >
+                                    {rewriting ? 'Rewriting...' : 'AI Rewrite'}
                                 </button>
                             </div>
                         </div>

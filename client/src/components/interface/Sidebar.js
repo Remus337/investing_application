@@ -19,6 +19,11 @@ function Sidebar({ onLogout, isAdmin, Nickname }) {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link to="/myshares" className="nav-link align-middle px-0">
+                  <i className="fs-4 bi bi-bank"></i> <span className="ms-1 d-none d-sm-inline">Wallet</span>
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link to="/investbot" className="nav-link align-middle px-0">
                   <i className="fs-4 bi bi bi-robot"></i> <span className="ms-1 d-none d-sm-inline">InvestBot</span>
                 </Link>

@@ -11,6 +11,8 @@ const tickersRoutes = require('./routes/charts/tickers');
 const profileRoutes = require('./routes/user_management/profile');
 const adminUsersRoutes = require('./routes/user_management/users');
 const investBotRoute = require('./routes/investbot/investbot');
+const payuRoutes = require('./routes/transactions/payu');
+const shareManagementRoutes = require('./routes/transactions/shares-management');
 
 const app = express();
 const port = 3001;
@@ -30,6 +32,8 @@ app.use('/tickers', tickersRoutes);
 app.use('/profile', profileRoutes);
 app.use('/users', adminUsersRoutes);
 app.use('/investbot', investBotRoute);
+app.use('/payu', payuRoutes);
+app.use('/shares-management', shareManagementRoutes);
 
 // Existing stocks endpoint
 app.get('/stocks', async (req, res) => {

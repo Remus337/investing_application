@@ -8,6 +8,7 @@ import SocialPage from './components/social';
 import InvestBotPage from './components/investbot';
 import MyPostsPage from './components/myposts';
 import MyProfilePage from './components/user_management';
+import MySharesPage from './components/myshares';
 import Admin from './components/admin';
 import axios from 'axios';
 
@@ -157,6 +158,16 @@ function App() {
         element={
           isAuthenticated ? (
             <MyProfilePage onLogout={handleLogout} isAdmin={is_admin} Nickname={nickname} />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/myshares"
+        element={
+          isAuthenticated ? (
+            <MySharesPage onLogout={handleLogout} isAdmin={is_admin} Nickname={nickname} />
           ) : (
             <Navigate to="/login" />
           )

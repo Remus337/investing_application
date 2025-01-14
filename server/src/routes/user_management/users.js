@@ -17,7 +17,7 @@ router.get('/search', async (req, res) => {
 
     try {
         const [users] = await db.promise().query(
-            'SELECT id, name, surname, email, nickname FROM users WHERE nickname LIKE ?',
+            'SELECT id, name, surname, email, nickname, is_admin FROM users WHERE nickname LIKE ?',
             [`%${nickname}%`]
         );
         res.json(users);
