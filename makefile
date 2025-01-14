@@ -1,3 +1,6 @@
+install:
+	cd client && npm install
+	cd server && npm install
 build-down:  
 	docker compose down --rmi all --volumes --remove-orphans
 build-up:

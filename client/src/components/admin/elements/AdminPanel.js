@@ -83,7 +83,7 @@ function AdminPanel({ isSuperAdmin }) {
     return (
         <div className="admin-panel">
             <h2>Admin Panel</h2>
-            <div className="mb-3">
+            <div className="input-group mb-3">
                 <input
                     type="text"
                     className="form-control"
@@ -91,11 +91,11 @@ function AdminPanel({ isSuperAdmin }) {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
-                <button className="btn btn-primary mt-2" onClick={handleSearch}>
+                <button className="btn btn-primary" onClick={handleSearch}>
                     Search
                 </button>
             </div>
-            <table className="table">
+            <table className="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -112,6 +112,7 @@ function AdminPanel({ isSuperAdmin }) {
                             <td>
                                 <input
                                     type="text"
+                                    className='form-control ml-1'
                                     value={user.name}
                                     onChange={(e) =>
                                         handleEditUser(user.id, { ...user, name: e.target.value })
@@ -121,6 +122,7 @@ function AdminPanel({ isSuperAdmin }) {
                             <td>
                                 <input
                                     type="text"
+                                    className='form-control mx-1'
                                     value={user.surname}
                                     onChange={(e) =>
                                         handleEditUser(user.id, { ...user, surname: e.target.value })
@@ -130,6 +132,7 @@ function AdminPanel({ isSuperAdmin }) {
                             <td>
                                 <input
                                     type="text"
+                                    className='form-control mx-1'
                                     value={user.email}
                                     onChange={(e) =>
                                         handleEditUser(user.id, { ...user, email: e.target.value })
@@ -139,6 +142,7 @@ function AdminPanel({ isSuperAdmin }) {
                             <td>
                                 <input
                                     type="text"
+                                    className='form-control mx-1'
                                     value={user.nickname}
                                     onChange={(e) =>
                                         handleEditUser(user.id, { ...user, nickname: e.target.value })
@@ -149,6 +153,7 @@ function AdminPanel({ isSuperAdmin }) {
                                 <td>
                                     <input
                                         type="checkbox"
+                                        className='form-check-input mx-1'
                                         checked={user.is_admin === 1}
                                         onChange={() => handleToggleAdmin(user.id, user.is_admin)}
                                     />
@@ -162,7 +167,7 @@ function AdminPanel({ isSuperAdmin }) {
                                         setShowPostsModal(true);
                                     }}
                                 >
-                                    View Posts
+                                    Posts
                                 </button>
                                 <button
                                     className="btn btn-secondary me-2"
@@ -171,13 +176,13 @@ function AdminPanel({ isSuperAdmin }) {
                                         setShowCommentsModal(true);
                                     }}
                                 >
-                                    View Comments
+                                    Comments
                                 </button>
                                 <button
                                     className="btn btn-danger"
                                     onClick={() => handleDeleteUser(user.id)}
                                 >
-                                    Delete User
+                                    Delete
                                 </button>
                             </td>
                         </tr>

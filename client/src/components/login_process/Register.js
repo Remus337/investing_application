@@ -27,24 +27,37 @@ function Register() {
   };
 
   return (
-    <div>
-      <nav className='bg-dark text-white'>
-        <ul>
-            <>
-              <li><Link to="/login"><button className='btn btn-primary'>Login</button></Link></li>
-            </>
-        </ul>
-      </nav>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
-        <input type="text" name="surname" placeholder="Surname" value={formData.surname} onChange={handleChange} required />
-        <input type="text" name="nickname" placeholder="Nickname" value={formData.nickname} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
-        <button type="submit">Register</button>
-      </form>
-      {message && <p>{message}</p>}
+    <div className='vh-100 vw-100 bg-dark'>
+      <div className='container text-center h-100'>
+        <div className='mt-5 rounded bg-dark bg-gradient shadow p-5 row mx-3 justify-content-center align-items-center'>
+          <div className="col-xl-3 col-md-3 col-12">
+            <img src="../../logo.svg" alt="Logo" />
+          </div>
+          <div className="col-xl-9 col-md-9 col-12 text-light px-5">
+            <h5 className='mt-5'>Register</h5>
+            <form onSubmit={handleSubmit}>
+              <div className='form-outline mb-2'>
+                <input type="text" name="name" className='form-control mt-2 mb-2' placeholder="Name" value={formData.name} onChange={handleChange} required />
+              </div>
+              <div className='form-outline mb-2'>
+                <input type="text" name="surname" className='form-control mt-2 mb-2' placeholder="Surname" value={formData.surname} onChange={handleChange} required />
+              </div>
+              <div className='form-outline mb-2'>
+                <input type="text" name="nickname" className='form-control mt-2 mb-2' placeholder="Nickname" value={formData.nickname} onChange={handleChange} required />
+              </div>
+              <div className='form-outline mb-2'>
+                <input type="email" name="email" className='form-control mt-2 mb-2' placeholder="Email" value={formData.email} onChange={handleChange} required />
+              </div>
+              <div className='form-outline mb-2'>
+                <input type="password" name="password" className='form-control mt-2 mb-2' placeholder="Password" value={formData.password} onChange={handleChange} required />
+              </div>
+              <button type="submit" className='btn btn-light'>Register</button>
+            </form>
+            <p>Already have an account? <Link to="/login">Login</Link></p>
+            {message && <p>{message}</p>}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
