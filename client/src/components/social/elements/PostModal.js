@@ -118,7 +118,7 @@ function PostModal({ post, onClose, onDeletePost, onEditPost }) {
                     </div>
                     <div className="modal-body">
                         <p className="text-muted fs-6 fw-light">By: {postDetails.author_nickname}</p>
-                        <p>{postDetails.content}</p>
+                        <p style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{postDetails.content}</p>
                         <hr />
                         <CommentsSection
                             comments={comments}

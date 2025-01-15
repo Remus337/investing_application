@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function UserPostsModal({ userId, onClose }) {
+function UserPostsModal({ userId, onClose, Nickname }) {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -47,7 +47,7 @@ function UserPostsModal({ userId, onClose }) {
             <div className="modal-dialog modal-lg">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title">Posts by User {userId}</h5>
+                        <h5 className="modal-title">Posts by {Nickname}</h5>
                         <button type="button" className="btn-close" onClick={onClose}></button>
                     </div>
                     <div className="modal-body">
@@ -57,8 +57,8 @@ function UserPostsModal({ userId, onClose }) {
                             <ul className="list-group">
                                 {posts.map((post) => (
                                     <li key={post.id} className="list-group-item">
-                                        <h6>{post.title}</h6>
-                                        <p>{post.content}</p>
+                                        <h5>{post.title}</h5>
+                                        <p style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{post.content}</p>
                                         <button
                                             className="btn btn-danger btn-sm"
                                             onClick={() => handleDeletePost(post.id)}

@@ -7,6 +7,7 @@ function AdminPanel({ isSuperAdmin }) {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
     const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedUserNickname, setSelectedUserNickname] = useState('');
     const [showPostsModal, setShowPostsModal] = useState(false);
     const [showCommentsModal, setShowCommentsModal] = useState(false);
 
@@ -165,6 +166,7 @@ function AdminPanel({ isSuperAdmin }) {
                                     onClick={() => {
                                         setSelectedUser(user.id);
                                         setShowPostsModal(true);
+                                        setSelectedUserNickname(user.nickname);
                                     }}
                                 >
                                     Posts
@@ -174,6 +176,7 @@ function AdminPanel({ isSuperAdmin }) {
                                     onClick={() => {
                                         setSelectedUser(user.id);
                                         setShowCommentsModal(true);
+                                        setSelectedUserNickname(user.nickname);
                                     }}
                                 >
                                     Comments
@@ -195,6 +198,7 @@ function AdminPanel({ isSuperAdmin }) {
                 <UserPostsModal
                     userId={selectedUser}
                     onClose={() => setShowPostsModal(false)}
+                    Nickname={selectedUserNickname}
                 />
             )}
 
@@ -203,6 +207,7 @@ function AdminPanel({ isSuperAdmin }) {
                 <UserCommentsModal
                     userId={selectedUser}
                     onClose={() => setShowCommentsModal(false)}
+                    Nickname={selectedUserNickname}
                 />
             )}
         </div>

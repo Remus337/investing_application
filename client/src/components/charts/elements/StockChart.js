@@ -151,35 +151,44 @@ const StockChart = ({ stockData }) => {
         };
 
         return (
-          <div key={stock.symbol}>
-            <h2>{stock.symbol} Stock Data Chart</h2>
+          <div key={stock.symbol} className='card p-3 m-3 shadow'>
+            <h4>{stock.symbol} Stock Data Chart</h4>
             <Line data={chartData} options={{ responsive: true, scales: { y: { beginAtZero: false } } }} />
-            <div>
+            <div className='my-2'>
               <p>Last Close Price: ${lastClosePriceUSD.toFixed(2)} (~{lastClosePricePLN} PLN)</p>
-              <input
-                type="number"
-                step="0.01"
-                placeholder="Amount of shares"
-                value={amounts[stock.symbol] || ''}
-                onChange={(e) => handleAmountChange(stock.symbol, e.target.value)}
-              />
-              <button
-                onClick={() => handleBuyShares(stock.symbol, lastClosePriceUSD)}
-                disabled={!amounts[stock.symbol] || lastClosePriceUSD === 0}
-              >
-                Buy
-              </button>
+              <div className='row'>
+                <div className='col-xl-6 col-sm-9 col-12'>
+                  <div className='input-group'>
+                    <span class="input-group-text"><i className="bi bi-bar-chart-steps"></i></span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      className='form-control'
+                      placeholder="Amount of shares"
+                      value={amounts[stock.symbol] || ''}
+                      onChange={(e) => handleAmountChange(stock.symbol, e.target.value)}
+                    />
+                    <button
+                      className='btn btn-primary'
+                      onClick={() => handleBuyShares(stock.symbol, lastClosePriceUSD)}
+                      disabled={!amounts[stock.symbol] || lastClosePriceUSD === 0}
+                    >
+                      Buy
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
             <div>
-              <h3>Analysis:</h3>
+              <h5>Analysis:</h5>
               {analysis.length > 0 ? (
-                <ul>
+                <div className='row g-0'>
                   {analysis.map((item, index) => (
-                    <li key={index} style={{ color: item.summary.includes('decreased') ? 'red' : item.summary.includes('increased') ? 'green' : 'black' }}>
+                    <div key={index} className={`${item.summary.includes('decreased') ? 'text-danger' : item.summary.includes('increased') ? 'text-success' : 'text-dark'} bg-light border col-xl-2 col-sm-5 col-12 m-3 p-2 shadow rounded`}>
                       {item.summary}
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                </div>
               ) : (
                 <p>Loading analysis...</p>
               )}

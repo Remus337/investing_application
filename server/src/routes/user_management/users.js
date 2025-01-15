@@ -2,6 +2,8 @@ const express = require('express');
 const db = require('../../config/db');
 const router = express.Router();
 
+const DICEBEAR_BASE_URL = 'https://api.dicebear.com/9.x';
+
 router.get('/', async (req, res) => {
     try {
         const [users] = await db.promise().query('SELECT id, name, surname, email, nickname, is_admin FROM users');
@@ -141,6 +143,21 @@ router.delete('/:userId/comments', async (req, res) => {
         console.error('Error deleting comments:', error);
         res.status(500).send('Failed to delete comments.');
     }
+});
+
+router.get('/avatar/:nickname', (req, res) => {
+    const { nickname } = req.params;
+
+    if (!nickname) {
+        return res.status(400).json({ error: 'Nickname is required' });
+    }
+
+    const style = 'avataaars';
+
+    // Generate the URL for the avatar
+    const avatarUrl = `${DICEBEAR_BASE_URL}/${style}/svg?seed=${encodeURIComponent(nickname)}`;
+
+    res.json({ avatarUrl });
 });
 
 module.exports = router;

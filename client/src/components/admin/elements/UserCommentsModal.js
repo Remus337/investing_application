@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function UserCommentsModal({ userId, onClose }) {
+function UserCommentsModal({ userId, onClose, Nickname }) {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -47,7 +47,7 @@ function UserCommentsModal({ userId, onClose }) {
             <div className="modal-dialog modal-lg">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title">Comments by User {userId}</h5>
+                        <h5 className="modal-title">Comments by {Nickname}</h5>
                         <button type="button" className="btn-close" onClick={onClose}></button>
                     </div>
                     <div className="modal-body">

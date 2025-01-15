@@ -81,9 +81,7 @@ function Charts() {
 
   return (
     <div className="charts-page">
-      <div className="d-flex justify-content-between align-items-center mb-3 pt-1">
-        {/* Ticker Selector */}
-        <div className="ticker-selector input-group">
+        <div className="ticker-selector input-group mb-3 pt-1">
           <Select
             id="tickerSelect"
             className='form-control'
@@ -96,17 +94,14 @@ function Charts() {
             getOptionLabel={(e) => e.label} // Show the ticker name and symbol
             closeMenuOnSelect={false}
           />
+          <button
+            className="btn btn-primary"
+            onClick={handleSearchSubmit}
+            disabled={searchDisabled}
+          >
+            {searchDisabled ? `Search Disabled (${timer}s)` : 'Search'}
+          </button>
         </div>
-
-        {/* Search Button */}
-        <button
-          className="btn btn-primary"
-          onClick={handleSearchSubmit}
-          disabled={searchDisabled}
-        >
-          {searchDisabled ? `Search Disabled (${timer}s)` : 'Search'}
-        </button>
-      </div>
 
       {/* Charts */}
       {loading ? (
