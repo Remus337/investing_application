@@ -26,8 +26,9 @@ function Sidebar({ onLogout, isAdmin, Nickname }) {
       <div className="row flex-nowrap">
         <div className="col-auto col-md-12 col-xl-12 px-sm-2 px-0">
           <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-            <a href="/" className="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-              <span className="fs-5 d-none d-sm-inline">NAI</span>
+            <a href="/" className="d-flex flex-column pb-3 mb-3 me-md-auto text-white text-decoration-none">
+              <span className="fs-5 fw-light d-sm-inline">NAI</span>
+              <span className="fs-6 fw-light">Build your future</span>
             </a>
             <ul className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
               <li className="nav-item">

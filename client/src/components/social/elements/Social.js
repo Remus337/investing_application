@@ -97,7 +97,7 @@ function Social() {
                     {sortedPosts.map((post) => (
                         <div
                             key={post.id}
-                            className="post card mb-3"
+                            className="post card mb-3 shadow"
                             onClick={() => handleOpenPostModal(post)}
                             style={{ cursor: 'pointer' }}
                         >
@@ -105,8 +105,8 @@ function Social() {
                                 <h3 className="card-title">{post.title}</h3>
                                 <p className="card-subtitle mb-2 text-muted fs-6 fw-light">By: {post.author_nickname}</p>
                                 <p className="card-text">
-                                    {post.content.length > 150
-                                        ? `${post.content.slice(0, 150)}... Read More`
+                                    {post.content.length > 300
+                                        ? `${post.content.slice(0, 300)}... Read More`
                                         : post.content}
                                 </p>
                             </div>

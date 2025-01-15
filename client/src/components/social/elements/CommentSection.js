@@ -9,9 +9,9 @@ function CommentsSection({ comments, onDeleteComment, userId, postAuthorId }) {
             ) : (
                 <div>
                     {comments.map((comment) => (
-                        <div key={comment.id} className="comment">
-                            <p>{comment.comment}</p>
-                            <p>By: {comment.author_nickname}</p>
+                        <div key={comment.id} className="comment mb-2 p-2 shadow rounded">
+                            <p className="text-muted fs-6 fw-light">{comment.author_nickname}: </p>
+                            <p style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{comment.comment}</p>
                             {(comment.user_id === userId || postAuthorId === userId) && (
                                 <button
                                     className="btn btn-danger btn-sm"

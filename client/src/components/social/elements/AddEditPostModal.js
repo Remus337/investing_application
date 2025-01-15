@@ -81,7 +81,7 @@ function AddEditPostModal({ userId, post, onPostAdded, onPostEdited, onClose }) 
                             onChange={(e) => setPostDetails({ ...postDetails, title: e.target.value })}
                         />
                         <textarea
-                            className="form-control h-50"
+                            className="form-control"
                             placeholder="Content"
                             value={postDetails.content}
                             onChange={(e) => setPostDetails({ ...postDetails, content: e.target.value })}
