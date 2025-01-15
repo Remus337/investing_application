@@ -96,103 +96,104 @@ function AdminPanel({ isSuperAdmin }) {
                     Search
                 </button>
             </div>
-            <table className="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Surname</th>
-                        <th>Email</th>
-                        <th>Nickname</th>
-                        {isSuperAdmin === 1 && <th>Is Admin</th>}
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr key={user.id}>
-                            <td>
-                                <input
-                                    type="text"
-                                    className='form-control ml-1'
-                                    value={user.name}
-                                    onChange={(e) =>
-                                        handleEditUser(user.id, { ...user, name: e.target.value })
-                                    }
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    className='form-control mx-1'
-                                    value={user.surname}
-                                    onChange={(e) =>
-                                        handleEditUser(user.id, { ...user, surname: e.target.value })
-                                    }
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    className='form-control mx-1'
-                                    value={user.email}
-                                    onChange={(e) =>
-                                        handleEditUser(user.id, { ...user, email: e.target.value })
-                                    }
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    className='form-control mx-1'
-                                    value={user.nickname}
-                                    onChange={(e) =>
-                                        handleEditUser(user.id, { ...user, nickname: e.target.value })
-                                    }
-                                />
-                            </td>
-                            {isSuperAdmin === 1 && (
+            <div className='table-responsive'>
+                <table className="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Surname</th>
+                            <th>Email</th>
+                            <th>Nickname</th>
+                            {isSuperAdmin === 1 && <th>Is Admin</th>}
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr key={user.id}>
                                 <td>
                                     <input
-                                        type="checkbox"
-                                        className='form-check-input mx-1'
-                                        checked={user.is_admin === 1}
-                                        onChange={() => handleToggleAdmin(user.id, user.is_admin)}
+                                        type="text"
+                                        className='form-control ml-1'
+                                        value={user.name}
+                                        onChange={(e) =>
+                                            handleEditUser(user.id, { ...user, name: e.target.value })
+                                        }
                                     />
                                 </td>
-                            )}
-                            <td>
-                                <button
-                                    className="btn btn-info me-2"
-                                    onClick={() => {
-                                        setSelectedUser(user.id);
-                                        setShowPostsModal(true);
-                                        setSelectedUserNickname(user.nickname);
-                                    }}
-                                >
-                                    Posts
-                                </button>
-                                <button
-                                    className="btn btn-secondary me-2"
-                                    onClick={() => {
-                                        setSelectedUser(user.id);
-                                        setShowCommentsModal(true);
-                                        setSelectedUserNickname(user.nickname);
-                                    }}
-                                >
-                                    Comments
-                                </button>
-                                <button
-                                    className="btn btn-danger"
-                                    onClick={() => handleDeleteUser(user.id)}
-                                >
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
+                                <td>
+                                    <input
+                                        type="text"
+                                        className='form-control mx-1'
+                                        value={user.surname}
+                                        onChange={(e) =>
+                                            handleEditUser(user.id, { ...user, surname: e.target.value })
+                                        }
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        className='form-control mx-1'
+                                        value={user.email}
+                                        onChange={(e) =>
+                                            handleEditUser(user.id, { ...user, email: e.target.value })
+                                        }
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        className='form-control mx-1'
+                                        value={user.nickname}
+                                        onChange={(e) =>
+                                            handleEditUser(user.id, { ...user, nickname: e.target.value })
+                                        }
+                                    />
+                                </td>
+                                {isSuperAdmin === 1 && (
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            className='form-check-input mx-1'
+                                            checked={user.is_admin === 1}
+                                            onChange={() => handleToggleAdmin(user.id, user.is_admin)}
+                                        />
+                                    </td>
+                                )}
+                                <td>
+                                    <button
+                                        className="btn btn-info me-2"
+                                        onClick={() => {
+                                            setSelectedUser(user.id);
+                                            setShowPostsModal(true);
+                                            setSelectedUserNickname(user.nickname);
+                                        }}
+                                    >
+                                        Posts
+                                    </button>
+                                    <button
+                                        className="btn btn-secondary me-2"
+                                        onClick={() => {
+                                            setSelectedUser(user.id);
+                                            setShowCommentsModal(true);
+                                            setSelectedUserNickname(user.nickname);
+                                        }}
+                                    >
+                                        Comments
+                                    </button>
+                                    <button
+                                        className="btn btn-danger"
+                                        onClick={() => handleDeleteUser(user.id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
             {/* User Posts Modal */}
             {showPostsModal && (
                 <UserPostsModal

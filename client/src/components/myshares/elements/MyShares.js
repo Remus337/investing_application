@@ -33,12 +33,12 @@ const MyShares = () => {
 
     const fetchExchangeRate = async () => {
         try {
-          const response = await axios.get('http://localhost:3001/shares-management/get-pln-exchange-rate');
-          setExchangeRate(response.data.exchangeRate); // Update the exchange rate
+            const response = await axios.get('http://localhost:3001/shares-management/get-pln-exchange-rate');
+            setExchangeRate(response.data.exchangeRate); // Update the exchange rate
         } catch (error) {
-          console.error('Error fetching exchange rate:', error);
+            console.error('Error fetching exchange rate:', error);
         }
-      };
+    };
 
     useEffect(() => {
         fetchSharesAndHistory();
@@ -97,51 +97,57 @@ const MyShares = () => {
                 <h2>Account Value</h2>
                 <Line data={chartData} options={{ responsive: true, scales: { y: { beginAtZero: false } } }} />
             </div>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Ticker</th>
-                        <th>Remaining Quantity</th>
-                        <th>Current Price</th>
-                        <th>Current Value</th>
-                        <th>Gain/Loss</th>
-                        <th>Gain/Loss persentage</th>
-                        <th>Sell</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {shares.map((share) => (
-                        <tr key={share.ticker}>
-                            <td className='bold'>{share.ticker}</td>
-                            <td>{share.remainingQuantity}</td>
-                            <td>${(share.currentPrice / exchangeRate).toFixed(2)}(~{share.currentPrice}PLN)</td>
-                            <td>${(share.currentValueWithMarketCorrection / exchangeRate).toFixed(2)}(~{share.currentValueWithMarketCorrection}PLN)</td>
-                            <td style={{ color: share.gainLoss >= 0 ? 'green' : 'red', }}>
-                                ${share.gainLoss / exchangeRate}(~{share.gainLoss}PLN)
-                            </td>
-                            <td style={{color: share.gainLossPercentage >= 0 ? 'green' : 'red',}}>%{share.gainLossPercentage}</td>
-                            <td>
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    placeholder="Amount"
-                                    value={sellTicker === share.ticker ? sellAmount : ''}
-                                    onChange={(e) => {
-                                        setSellAmount(e.target.value);
-                                        setSellTicker(share.ticker);
-                                    }}
-                                />
-                                <button
-                                    onClick={() => handleSellShares(share.ticker, share.currentPrice)}
-                                    disabled={!sellAmount || sellTicker !== share.ticker || parseFloat(sellAmount) > share.remainingQuantity}
-                                >
-                                    Sell
-                                </button>
-                            </td>
+            <div className='table-responsive'>
+                <table className="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th>Remaining Quantity</th>
+                            <th>Current Price</th>
+                            <th>Current Value</th>
+                            <th>Gain/Loss</th>
+                            <th>Gain/Loss persentage</th>
+                            <th>Sell</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {shares.map((share) => (
+                            <tr key={share.ticker}>
+                                <td className='bold'>{share.ticker}</td>
+                                <td>{share.remainingQuantity}</td>
+                                <td>${(share.currentPrice / exchangeRate).toFixed(2)}(~{share.currentPrice}PLN)</td>
+                                <td>${(share.currentValueWithMarketCorrection / exchangeRate).toFixed(2)}(~{share.currentValueWithMarketCorrection}PLN)</td>
+                                <td style={{ color: share.gainLoss >= 0 ? 'green' : 'red', }}>
+                                    ${(share.gainLoss / exchangeRate).toFixed(2)}(~{share.gainLoss}PLN)
+                                </td>
+                                <td style={{ color: share.gainLossPercentage >= 0 ? 'green' : 'red', }}>%{share.gainLossPercentage}</td>
+                                <td>
+                                    <div className='input-group'>
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            placeholder="Amount"
+                                            className='form-control'
+                                            value={sellTicker === share.ticker ? sellAmount : ''}
+                                            onChange={(e) => {
+                                                setSellAmount(e.target.value);
+                                                setSellTicker(share.ticker);
+                                            }}
+                                        />
+                                        <button
+                                            className='btn btn-primary'
+                                            onClick={() => handleSellShares(share.ticker, share.currentPrice)}
+                                            disabled={!sellAmount || sellTicker !== share.ticker || parseFloat(sellAmount) > share.remainingQuantity}
+                                        >
+                                            Sell
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
             <h3>Total value of shares: </h3>
             <h3 style={{ color: totalValueOfShares >= 0 ? 'green' : 'red', }}>${totalValueOfSharesInUSD} (~{totalValueOfShares} PLN)</h3>
         </div>
