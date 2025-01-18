@@ -81,6 +81,10 @@ router.delete('/:id', async (req, res) => {
                 .send('Cannot change personal data for a superadmin.');
         }
 
+        await db.promise().query('DELETE FROM transactions WHERE user_id = ?', [id]);
+        await db.promise().query('DELETE FROM transactions_sold WHERE user_id = ?', [id]);
+        await db.promise().query('DELETE FROM comments WHERE user_id = ?', [id]);
+        await db.promise().query('DELETE FROM posts WHERE user_id = ?', [id]);
         await db.promise().query('DELETE FROM users WHERE id = ?', [id]);
         res.status(200).send('User deleted successfully.');
     } catch (error) {
